@@ -18,7 +18,8 @@ sourceSets {
 }
 
 dependencies {
-    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    implementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+    implementation 'junit:junit:4.13.2'
 }
 
 test {

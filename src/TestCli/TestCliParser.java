@@ -3,10 +3,10 @@ package TestCli;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
-public class Main {
+public class TestCliParser {
     public static void main(String[] args) {
+        TestCliParser parser = new TestCliParser();
         String[] commands = {
                 "/output ",
                 "/output",
@@ -23,11 +23,11 @@ public class Main {
         for (String command : commands) {
             System.out.print(command);
             System.out.print(" -> ");
-            System.out.println((parse(command)));
+            System.out.println((parser.parse(command)));
         }
     }
 
-    private static List<String> parse(String command) {
+    public List<String> parse(String command) {
         List<String> list = new ArrayList<>();
         String[] commands = command.split("\\s+", 2);
         list.add(commands[0]);
@@ -39,7 +39,7 @@ public class Main {
                     list.add(params.substring(1, closeQuotePos));
                     params = params.substring(closeQuotePos + 1).trim();
                 } else {
-                    int nextSpacePos = params.indexOf(' ', 0);
+                    int nextSpacePos = params.indexOf(' ');
                     if (nextSpacePos != -1) {
                         list.add(params.substring(0, nextSpacePos));
                         params = params.substring(nextSpacePos + 1).trim();
