@@ -1,36 +1,36 @@
-import TestCli.TestCliParser;
+import CliParser.CliParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TestCliParserTest {
+class CliParserTest {
 
     @Test
     void testParseWithoutQuotes() {
-        TestCliParser parser = new TestCliParser();
+        CliParser parser = new CliParser();
         List<String> result = parser.parse("/command param1 param2");
         assertEquals(result, List.of("/command", "param1", "param2"));
     }
 
     @Test
     void testParseAllWithQuotes() {
-        TestCliParser parser = new TestCliParser();
+        CliParser parser = new CliParser();
         List<String> result = parser.parse("/command \"param 1\" \"param 2\" \"param 3\"");
         assertEquals(result, (List.of("/command", "param 1", "param 2", "param 3")));
     }
 
     @Test
     void testParseWithOneFirstQuote() {
-        TestCliParser parser = new TestCliParser();
+        CliParser parser = new CliParser();
         List<String> result = parser.parse("/command \"param1\" param2");
         assertEquals(result, (List.of("/command", "param1", "param2")));
     }
 
     @Test
     void testParseWithOneFirstQuoteWitSpaces() {
-        TestCliParser parser = new TestCliParser();
+        CliParser parser = new CliParser();
         List<String> result = parser.parse("/command \"param1 second third\" param2");
         assertEquals(result, (List.of("/command", "param1 second third", "param2")));
     }

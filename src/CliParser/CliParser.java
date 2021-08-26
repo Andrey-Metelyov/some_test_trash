@@ -1,12 +1,12 @@
-package TestCli;
+package CliParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TestCliParser {
+public class CliParser {
     public static void main(String[] args) {
-        TestCliParser parser = new TestCliParser();
+        CliParser parser = new CliParser();
         String[] commands = {
                 "/output ",
                 "/output",
