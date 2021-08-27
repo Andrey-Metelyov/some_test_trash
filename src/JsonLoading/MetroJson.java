@@ -37,15 +37,49 @@ class Metro {
 class MetroLine {
     String name;
     Map<String, Station> stations = new HashMap<>();
+
+    @Override
+    public String toString() {
+        return "MetroLine{" +
+                "name='" + name + '\'' +
+                ", stations=" + stations +
+                "}\n";
+    }
 }
 
 class Station {
     String name;
-    List<Station> transfer;
+    List<TransferStation> transfer;
 
-    public Station(String name, List<Station> transfer) {
+    public Station(String name, List<TransferStation> transfer) {
         this.name = name;
         this.transfer = transfer;
+    }
+
+    @Override
+    public String toString() {
+        return "Station{" +
+                "name='" + name + '\'' +
+                ", transfer=" + transfer +
+                "}\n";
+    }
+}
+
+class TransferStation {
+    String line;
+    String station;
+
+    public TransferStation(String line, String station) {
+        this.line = line;
+        this.station = station;
+    }
+
+    @Override
+    public String toString() {
+        return "TransferStation{" +
+                "line='" + line + '\'' +
+                ", station='" + station + '\'' +
+                '}';
     }
 }
 
@@ -74,33 +108,55 @@ class MetroLineSerializer implements JsonSerializer<MetroLine> {
 class MetroDeserializer implements JsonDeserializer<Metro> {
     @Override
     public Metro deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        Metro metro = new Metro();
         JsonObject jsonObject = json.getAsJsonObject();
-        MetroLine metroLine = new MetroLine();
-        metroLine.stations = context.deserialize(jsonObject.get());
+        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+            MetroLine metroLine = context.deserialize(entry.getValue(), MetroLine.class);
+            metroLine.name = entry.getKey();
+            metro.metroLines.add(metroLine);
+        }
+        return metro;
     }
 }
 
+class MetroLineDeserializer implements JsonDeserializer<MetroLine> {
+    @Override
+    public MetroLine deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        MetroLine metroLine = new MetroLine();
+        JsonObject jsonObject = json.getAsJsonObject();
+        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+            Station station = context.deserialize(entry.getValue(), Station.class);
+            metroLine.stations.put(entry.getKey(), station);
+        }
+        return metroLine;
+    }
+}
 
-public class Main {
+public class MetroJson {
     public static void main(String[] args) {
 //        String json = "{ 'line': { '1':'station 1', '2':'station 2' } }";
 //        String json = "{ 'name':'Aname', {'name':'Bname', 'nick':'Bnick'} }";
 //        serialize();
-        deserialize();
+//        deserialize(serialize());
+        deserialize(metroJson);
 
 
     }
 
-    private static void deserialize() {
-        Metro metro = new Gson().fromJson(metroJson, Metro.class);
+    private static void deserialize(String json) {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Metro.class, new MetroDeserializer())
+                .registerTypeAdapter(MetroLine.class, new MetroLineDeserializer())
+                .create();
+        Metro metro = gson.fromJson(json, Metro.class);
         System.out.println(metro);
     }
 
-    private static void serialize() {
+    private static String serialize() {
         Metro metro = new Metro();
         MetroLine metroLine = new MetroLine();
         metroLine.name = "Linka A";
-        metroLine.stations.put("1", new Station("Nemocnice Motol", List.of()));
+        metroLine.stations.put("1", new Station("Nemocnice Motol", List.of(new TransferStation("Link A", "somest"))));
         metroLine.stations.put("2", new Station("Petriny", List.of()));
         metro.metroLines.add(metroLine);
 
@@ -111,6 +167,7 @@ public class Main {
                 .create();
         String json = gson.toJson(metro);
         System.out.println(json);
+        return json;
     }
 
     static String metroJson = """
