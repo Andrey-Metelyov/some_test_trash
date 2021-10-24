@@ -12,7 +12,8 @@ fun drawCircles(): BufferedImage {
         Triple(50, 50, Color.RED),
         Triple(50, 75, Color.YELLOW),
         Triple(75, 50, Color.GREEN),
-        Triple(75, 75, Color.BLUE))
+        Triple(75, 75, Color.BLUE)
+    )
     graphics.color = Color.RED
     for (el in coord) {
         val x = el.first
@@ -41,6 +42,27 @@ fun drawLines(): BufferedImage {
         val c = el.second
         graphics.color = c
         graphics.drawLine(x1, y1, x2, y2)
+    }
+    return image
+}
+
+fun drawStrings(): BufferedImage {
+    val height: Int = 200
+    val width: Int = 200
+    val text = "Hello, images!"
+    val image = BufferedImage(height, width, BufferedImage.TYPE_INT_RGB)
+    val graphics = image.createGraphics()
+    val coord = arrayOf(
+        Pair(arrayOf(50, 50), Color.RED),
+        Pair(arrayOf(51, 51), Color.GREEN),
+        Pair(arrayOf(52, 52), Color.BLUE),
+    )
+    for (el in coord) {
+        val x = el.first[0]
+        val y = el.first[1]
+        val c = el.second
+        graphics.color = c
+        graphics.drawString(text, x, y)
     }
     return image
 }
