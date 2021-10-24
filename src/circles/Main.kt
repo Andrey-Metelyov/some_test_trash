@@ -1,6 +1,7 @@
 package circles
 
 import java.awt.Color
+import java.awt.SystemColor.text
 import java.awt.image.BufferedImage
 
 fun drawCircles(): BufferedImage {
@@ -64,5 +65,15 @@ fun drawStrings(): BufferedImage {
         graphics.color = c
         graphics.drawString(text, x, y)
     }
+    return image
+}
+
+fun drawSquare(): BufferedImage {
+    val height: Int = 500
+    val width: Int = 500
+    val image = BufferedImage(height, width, BufferedImage.TYPE_INT_RGB)
+    val graphics = image.createGraphics()
+    graphics.color = Color.RED
+    graphics.drawRect(100, 100, 300, 300)
     return image
 }
